@@ -5,5 +5,5 @@ def run():
     game = Game()
     game.game_loop()
 
-
-run()
+if (__name__ == "__main__"):
+    run()

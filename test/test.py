@@ -1,5 +1,5 @@
 import unittest
-from src.clicker import *
+import src.clicker
 
 VALUE = 100
 PARAM = [(100, 100), "text", 100, 100, (100, 100), 100]
