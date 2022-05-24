@@ -20,4 +20,5 @@ SCREEN_COLOR = WHITE
 BUTTON_COLOR = BLUE
 FONT_COLOR = BLACK
 
-LIST_OF_BYSNES = [Bysnes('Нефтяная вышка', 10, 10), Bysnes('заправка', 50, 5)]
+LIST_OF_BYSNES = [Bysnes('Нефтяная вышка', 1, 10), Bysnes('заправка', 5, 5)]
+LIST_OF_MATIRIAL = ['нефть', 'бензин']

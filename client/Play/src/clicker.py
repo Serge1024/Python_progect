@@ -101,9 +101,13 @@ class Game:
                         SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 
     def render_my_bysnes(self):
-        for i in self.my_bysnes_button:
+        SCREEN.fill(SCREEN_COLOR)
+        SCREEN.blit(self.background.image, self.background.rect)
+        SCREEN.blit(self.logo.image, self.logo.rect)
+        for i in self.my_bysnes_buttons:
             i.draw(SCREEN)
-
+        self.back_bysnes.draw(SCREEN)
+        pygame.display.flip()
         
     def check_events_my_bysnes(self):
         for event in pygame.event.get():
@@ -116,6 +120,12 @@ class Game:
                     self.running = False
                     self.bysnes_running = False
                     self.my_bysnes_flag = False
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                if (self.back_bysnes.rect.collidepoint(event.pos)):
+                    self.my_bysnes_flag = False
+
+
+
 
     def render_bysnes(self):
         SCREEN.fill(SCREEN_COLOR)
@@ -155,7 +165,7 @@ class Game:
                     self.bysnes_running = False
                 if (self.my_bysnes_button.rect.collidepoint(event.pos)):
                     self.my_bysnes_flag = True
-                    self.my_bysnes_button = init_list_this_button(self.my_bysnes, WIDTH, HEIGHT)
+                    self.my_bysnes_buttons = init_list_this_button(self.my_bysnes, WIDTH, HEIGHT)
                     while (self.my_bysnes_flag):
                         self.render_my_bysnes()
                         self.check_events_my_bysnes()
