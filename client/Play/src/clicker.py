@@ -50,18 +50,6 @@ class Game:
             i.draw(SCREEN)
         pygame.display.flip()
 
-    def render_win(self):
-        SCREEN.fill(BLACK)
-        text_win = self.font2.render("СЕССИЯ СДАНА!!!", True, WHITE)
-        SCREEN.blit(text_win, (WIDTH / 2, HEIGHT / 2))
-        pygame.display.flip()
-        pygame.time.delay(200)
-        SCREEN.fill(WHITE)
-        text_win = self.font2.render("СЕССИЯ СДАНА!!!", True, BLACK)
-        SCREEN.blit(text_win, (WIDTH / 5, HEIGHT / 5))
-        pygame.display.flip()
-        pygame.time.delay(200)
-
     def check_menu_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -112,6 +100,23 @@ class Game:
                         self.change_screen_size()
                         SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 
+    def render_my_bysnes(self):
+        for i in self.my_bysnes_button:
+            i.draw(SCREEN)
+
+        
+    def check_events_my_bysnes(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.running = False
+                self.bysnes_running = False
+                self.my_bysnes_flag = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:  # escape is pressed
+                    self.running = False
+                    self.bysnes_running = False
+                    self.my_bysnes_flag = False
+
     def render_bysnes(self):
         SCREEN.fill(SCREEN_COLOR)
         SCREEN.blit(self.background.image, self.background.rect)
@@ -148,6 +153,13 @@ class Game:
                         self.my_bysnes.append(bysnes)
                 if (self.back_bysnes.rect.collidepoint(event.pos)):
                     self.bysnes_running = False
+                if (self.my_bysnes_button.rect.collidepoint(event.pos)):
+                    self.my_bysnes_flag = True
+                    self.my_bysnes_button = init_list_this_button(self.my_bysnes, WIDTH, HEIGHT)
+                    while (self.my_bysnes_flag):
+                        self.render_my_bysnes()
+                        self.check_events_my_bysnes()
+
 
     def check_events(self):
         if pygame.time.get_ticks() - self.prev_tick >= 1000:

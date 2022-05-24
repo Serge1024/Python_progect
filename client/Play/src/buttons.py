@@ -140,6 +140,12 @@ class BysnesButton(Button):
             self.color = RED
             return False
 
+def init_list_this_button(LIST_OF_BYSNES, width, height):
+    bisnes_button = list()
+    for i in range(len(LIST_OF_BYSNES)):
+        bisnes_button.append(BysnesButton((width / 4 + width / 2 * (i % 2), (int(i / 2) * height / 6) + height / 6),
+                           LIST_OF_BYSNES[i].name, LIST_OF_BYSNES[i].price, (width * 3 / 8, height / 12), height, LIST_OF_BYSNES[i]))
+    return bisnes_button
 
 def initiate_buttons(width, height):
     upgrade_cpc = UpgradeCPC((width / 4,  height / 6),'Повысить свой класс', 1, (width * 3 / 8, height / 12), height)
@@ -154,10 +160,7 @@ def initiate_buttons(width, height):
                 Button((width / 3, height / 3), "Back", (width / 4, height / 6), height)]
 
     currency = [CurrencyButton((31 * width / 60, height / 16), "", (width * 3 / 8, height / 12), height)]
-    bisnes_button = list()
-    for i in range(len(LIST_OF_BYSNES)):
-        bisnes_button.append(BysnesButton((width / 4 + width / 2 * (i % 2), (int(i / 2) * height / 6) + height / 6),
-                           LIST_OF_BYSNES[i].name, LIST_OF_BYSNES[i].price, (width * 3 / 8, height / 12), height, LIST_OF_BYSNES[i]))
+    bisnes_button = init_list_this_button(LIST_OF_BYSNES, width, height)
     back_bysnes = Button((width / 4, height / 6 + 400), "Back", (width * 3 / 8, height / 12), height)
     my_bysnes = Button((width / 4 + 400, height / 6 + 400), "My bysnes", (width * 3 / 8, height / 12), height)
     return upgrade_cpc, upgrade_cps, main_menu, settings, currency, bisnes_button, back_bysnes, my_bysnes
