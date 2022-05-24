@@ -1,0 +1,4 @@
+/home/sergeee/Desktop/Python/Python_progect/build/CMakeFiles/rebuild_cache.dir
+/home/sergeee/Desktop/Python/Python_progect/build/CMakeFiles/edit_cache.dir
+/home/sergeee/Desktop/Python/Python_progect/build/CMakeFiles/ClientBinary.dir
+/home/sergeee/Desktop/Python/Python_progect/build/CMakeFiles/ServerBinary.dir

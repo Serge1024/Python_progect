@@ -1,0 +1,1 @@
+int beginner(char **argv);
