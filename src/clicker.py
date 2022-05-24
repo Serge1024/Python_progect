@@ -23,19 +23,17 @@ class Game:
         SCREEN.fill(SCREEN_COLOR)
         SCREEN.blit(self.background.image, self.background.rect)
         SCREEN.blit(self.logo.image, self.logo.rect)
-        for i in self.upgradesCPC:
-            i.draw(SCREEN)
-            i.check_if_available(self.dollar_score)
-        for i in self.upgradesCPS:
-            i.draw(SCREEN)
-            i.check_if_available(self.rub_score)
+        self.upgradesCPC.draw(SCREEN)
+        self.upgradesCPC.check_if_available(self.dollar_score)
+        self.upgradesCPS.draw(SCREEN)
+        self.upgradesCPS.check_if_available(self.rub_score)
         self.currency_button[0].draw(SCREEN)
         text_score_dollar = self.font.render("$" + str(self.dollar_score), True, FONT_COLOR)
         text_score_rub = self.font.render("Your wallet:  " + str(self.rub_score) + "RUB", True, FONT_COLOR)
         text_upgr_1 = self.font.render("$ per CLICK: " + str(self.booster), True, FONT_COLOR)
         text_upgr_2 = self.font.render("$ per SEC: " + str(self.auto_clicks), True, FONT_COLOR)
-        SCREEN.blit(text_score_dollar, (3 * WIDTH / 4, 11 * HEIGHT / 12))
-        SCREEN.blit(text_score_rub, (WIDTH / 4, 11 * HEIGHT / 12))
+        SCREEN.blit(text_score_dollar, (WIDTH / 20, HEIGHT / 20 + 200))
+        SCREEN.blit(text_score_rub, (10 * WIDTH / 14, HEIGHT / 20 + 200))
         SCREEN.blit(text_upgr_1, (WIDTH / 20, HEIGHT / 20))
         SCREEN.blit(text_upgr_2, (10 * WIDTH / 14, HEIGHT / 20))
         pygame.display.flip()
@@ -127,16 +125,12 @@ class Game:
                 elif event.key == pygame.K_ESCAPE:  # escape is pressed
                     self.running = False
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  # right mouse click
-                for upgr in self.upgradesCPS:
-                    if upgr.rect.collidepoint(event.pos):
-                        self.auto_clicks, self.rub_score = upgr.click(self.auto_clicks, self.rub_score)
-                for upgr in self.upgradesCPC:
-                    if upgr.rect.collidepoint(event.pos):
-                        self.booster, self.dollar_score = upgr.click(self.booster, self.dollar_score)
+                if self.upgradesCPS.rect.collidepoint(event.pos):
+                    self.auto_clicks, self.rub_score = self.upgradesCPS.click(self.auto_clicks, self.rub_score)
+                if self.upgradesCPC.rect.collidepoint(event.pos):
+                    self.booster, self.dollar_score = self.upgradesCPC.click(self.booster, self.dollar_score)
                 if self.currency_button[0].rect.collidepoint(event.pos):
                     self.rub_score, self.dollar_score = self.currency_button[0].click(self.rub_score, self.dollar_score)
-                if self.upgradesCPS[4].count == 1:
-                    self.game_end()
 
     def game_end(self):
         while self.running:

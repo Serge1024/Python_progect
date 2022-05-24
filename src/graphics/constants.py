@@ -6,7 +6,7 @@ resources_folder = game_folder + '/../../resources'
 img_folder = os.path.join(resources_folder, 'sprites')
 fonts_folder = os.path.join(resources_folder, 'fonts')
 logo_img = pygame.image.load(os.path.join(img_folder, 'MIPT.png'))
-background_img = pygame.image.load(os.path.join(img_folder, 'background.jpg'))
+background_img = pygame.image.load(os.path.join(img_folder, 'background.png'))
 
 
 # colours
@@ -19,7 +19,6 @@ SCREEN_COLOR = WHITE
 BUTTON_COLOR = BLUE
 FONT_COLOR = BLACK
 
-UPGRADES_LIST = [["Заботать LaTex", "Сходить на лабы", "Посмотреть матан", "Написать прогу", "Сдать коллок", "Закрыть англ",
-             "Закрыть физру", "Покушать в КСП", "Закрыть зачеты", "Сдать сессию"],
-            [10, 100, 1000, 10000, 50000, 100000, 200000, 500000, 1000000, 100000000],
-            [1, 10, 100, 1000, 10000, 50000, 100000, 200000, 500000, 1000000]]
+UPGRADES_LIST = [["Повысить свой класс" ,"Купить бизнес"],
+            [ 10, 100000000],
+            [ 1, 1000000]]

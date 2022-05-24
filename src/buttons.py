@@ -87,20 +87,19 @@ class UpgradeCPS(Button):
 
 # CPC means clicks per click
 class UpgradeCPC(Button):
-    def __init__(self, pos, text, price, cps, size, height):
+    def __init__(self, pos, text, price, size, height):
         super().__init__(pos, text, size, height)
         self.rect = Button(pos, text, size, height).rect
         self.count = 0
         self.text = text
         self.price = price
-        self.cps = cps
         self.color = RED
         self.border_color = BLACK
 
     def draw(self, surface):
         pygame.draw.rect(surface, self.color, self.rect, 0)
         pygame.draw.rect(surface, self.border_color, self.rect, 2)
-        text_surface = FONT.render(" " + str(self.text) + "  $" + str(self.price) + "  +" + str(self.cps), False, FONT_COLOR)
+        text_surface = FONT.render(" " + str(self.text) + str(self.price), False, FONT_COLOR)
         text_rect = text_surface.get_rect()
         text_rect.topleft = (self.rect.left + 10, self.rect.top + self.rect.height * 0.25)
         surface.blit(text_surface, text_rect)
@@ -109,7 +108,7 @@ class UpgradeCPC(Button):
         if dollar_score >= self.price:
             self.count += 1
             dollar_score -= self.price
-            booster += self.cps
+            booster += 1
             self.price *= 1.2
             self.price = int(self.price)
         return booster, dollar_score
@@ -126,17 +125,8 @@ class UpgradeCPC(Button):
 def initiate_buttons(width, height):
     upgrade_cpc = []
     upgrade_cps = []
-    for i in range(10):
-        if i % 2 == 0:
-            upgrade_cpc.append(
-                UpgradeCPC((width / 4 + width / 2 * (i % 2), (int(i / 2) * height / 6) + height / 6),
-                           UPGRADES_LIST[0][i],
-                           UPGRADES_LIST[1][i], UPGRADES_LIST[2][i], (width * 3 / 8, height / 12), height))
-        else:
-            upgrade_cps.append(
-                UpgradeCPS((width / 4 + width / 2 * (i % 2), (int(i / 2) * height / 6) + height / 6),
-                           UPGRADES_LIST[0][i],
-                           UPGRADES_LIST[1][i], UPGRADES_LIST[2][i], (width * 3 / 8, height / 12), height))
+    upgrade_cpc = UpgradeCPC((width / 4,  height / 6),UPGRADES_LIST[0][0], 1, (width * 3 / 8, height / 12), height)
+    upgrade_cps = UpgradeCPS((width / 4 + width / 2,  height / 6), UPGRADES_LIST[0][1], 10, 100000, (width * 3 / 8, height / 12), height)
 
     main_menu = [Button((width / 2, 2 * height / 3), "Settings", (width / 4, height / 6), height),
                  Button((width / 2, height / 3), "Play!", (width / 4, height / 6), height)]
@@ -147,5 +137,4 @@ def initiate_buttons(width, height):
                 Button((width / 3, height / 3), "Back", (width / 4, height / 6), height)]
 
     currency = [CurrencyButton((31 * width / 60, height / 16), "", (width * 3 / 8, height / 12), height)]
-
     return upgrade_cpc, upgrade_cps, main_menu, settings, currency
