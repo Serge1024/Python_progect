@@ -1,4 +1,4 @@
-from graphics.graphics import *
+from graphics import *
 from dollar import *
 
 
@@ -49,40 +49,25 @@ class CurrencyButton(Button):
 
 # CPS means Clicks per second
 class UpgradeCPS(Button):
-    def __init__(self, pos, text, price, cps, size, height):
+    def __init__(self, pos, text, size, height):
         super().__init__(pos, text, size, height)
         self.rect = Button(pos, text, size, height).rect
         self.count = 0
         self.text = text
-        self.price = price
-        self.cps = cps
         self.color = RED
         self.border_color = BLACK
 
     def draw(self, surface):
         pygame.draw.rect(surface, self.color, self.rect, 0)
         pygame.draw.rect(surface, self.border_color, self.rect, 2)
-        text_surface = FONT.render(" " + str(self.text) + " " + str(self.price) + "RUB  +" + str(self.cps), False, FONT_COLOR)
+        text_surface = FONT.render(" " + str(self.text), False, FONT_COLOR)
         text_rect = text_surface.get_rect()
         text_rect.topleft = (self.rect.left + 10, self.rect.top + self.rect.height * 0.25)
         surface.blit(text_surface, text_rect)
 
     def click(self, auto_clicks, rub_score):
-        if rub_score >= self.price:
-            self.count += 1
-            rub_score -= self.price
-            auto_clicks += self.cps
-            self.price *= 1.2
-            self.price = int(self.price)
-        return auto_clicks, rub_score
-
-    def check_if_available(self, rub_score):
-        if self.price <= rub_score:
-            self.color = BLUE
-            return True
-        else:
-            self.color = RED
-            return False
+        print("Lol")
+        return 0, 0
 
 
 # CPC means clicks per click
@@ -99,7 +84,7 @@ class UpgradeCPC(Button):
     def draw(self, surface):
         pygame.draw.rect(surface, self.color, self.rect, 0)
         pygame.draw.rect(surface, self.border_color, self.rect, 2)
-        text_surface = FONT.render(" " + str(self.text) + str(self.price), False, FONT_COLOR)
+        text_surface = FONT.render(" " + str(self.text), False, FONT_COLOR)
         text_rect = text_surface.get_rect()
         text_rect.topleft = (self.rect.left + 10, self.rect.top + self.rect.height * 0.25)
         surface.blit(text_surface, text_rect)
@@ -123,10 +108,8 @@ class UpgradeCPC(Button):
 
 
 def initiate_buttons(width, height):
-    upgrade_cpc = []
-    upgrade_cps = []
     upgrade_cpc = UpgradeCPC((width / 4,  height / 6),UPGRADES_LIST[0][0], 1, (width * 3 / 8, height / 12), height)
-    upgrade_cps = UpgradeCPS((width / 4 + width / 2,  height / 6), UPGRADES_LIST[0][1], 10, 100000, (width * 3 / 8, height / 12), height)
+    upgrade_cps = UpgradeCPS((width / 4 + width / 2,  height / 6), UPGRADES_LIST[0][1], (width * 3 / 8, height / 12), height)
 
     main_menu = [Button((width / 2, 2 * height / 3), "Settings", (width / 4, height / 6), height),
                  Button((width / 2, height / 3), "Play!", (width / 4, height / 6), height)]

@@ -1,4 +1,4 @@
-from graphics.constants import *
+from constants import *
 
 WIDTH = 800  # game window width
 HEIGHT = 600  # game window height

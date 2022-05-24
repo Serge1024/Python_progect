@@ -26,7 +26,6 @@ class Game:
         self.upgradesCPC.draw(SCREEN)
         self.upgradesCPC.check_if_available(self.dollar_score)
         self.upgradesCPS.draw(SCREEN)
-        self.upgradesCPS.check_if_available(self.rub_score)
         self.currency_button[0].draw(SCREEN)
         text_score_dollar = self.font.render("$" + str(self.dollar_score), True, FONT_COLOR)
         text_score_rub = self.font.render("Your wallet:  " + str(self.rub_score) + "RUB", True, FONT_COLOR)

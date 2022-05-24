@@ -2,7 +2,7 @@ import os
 import pygame
 
 game_folder = os.path.dirname(__file__)
-resources_folder = game_folder + '/../../resources'
+resources_folder = game_folder + '/../resources'
 img_folder = os.path.join(resources_folder, 'sprites')
 fonts_folder = os.path.join(resources_folder, 'fonts')
 logo_img = pygame.image.load(os.path.join(img_folder, 'MIPT.png'))
