@@ -1,6 +1,7 @@
 import os
 import pygame
 from bysnes import *
+from base_constants import *
 
 game_folder = os.path.dirname(__file__)
 resources_folder = game_folder + '/../resources'
@@ -20,5 +21,8 @@ SCREEN_COLOR = WHITE
 BUTTON_COLOR = BLUE
 FONT_COLOR = BLACK
 
-LIST_OF_BYSNES = [Bysnes('Нефтяная вышка', 1, 10), Bysnes('заправка', 5, 5)]
-LIST_OF_MATIRIAL = ['нефть', 'бензин']
+recept_of_petrol = Recept({LIST_OF_MATIRIAL[0] : 3, LIST_OF_MATIRIAL[1] : 0 }, {LIST_OF_MATIRIAL[0] : 0, LIST_OF_MATIRIAL[1] : 2 })
+recept_of_oil = Recept({LIST_OF_MATIRIAL[0] : 0, LIST_OF_MATIRIAL[1] : 0 }, {LIST_OF_MATIRIAL[0] : 3, LIST_OF_MATIRIAL[1] : 0 })
+neft = Bysnes('Нефтяная вышка', 1, recept_of_oil)
+neft.get_offer(Contract(0, 1, LIST_OF_MATIRIAL[0], 10, 100)) # delete me
+LIST_OF_BYSNES = [neft, Bysnes('заправка', 5, recept_of_petrol)]

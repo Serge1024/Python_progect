@@ -163,4 +163,10 @@ def initiate_buttons(width, height):
     bisnes_button = init_list_this_button(LIST_OF_BYSNES, width, height)
     back_bysnes = Button((width / 4, height / 6 + 400), "Back", (width * 3 / 8, height / 12), height)
     my_bysnes = Button((width / 4 + 400, height / 6 + 400), "My bysnes", (width * 3 / 8, height / 12), height)
-    return upgrade_cpc, upgrade_cps, main_menu, settings, currency, bisnes_button, back_bysnes, my_bysnes
+    YES_button = Button((width / 4 + 350, height / 6 + 300 ), "YES", (width * 3/ 20, height / 12), height)
+    NO_button = Button((width / 4 + 500, height / 6 + 300), "NO", (width * 3 /20, height / 12), height)
+    text_pole_make_offer = list()
+    for i in range(4):
+        text_pole_make_offer.append(Button((width / 4 + 500 - i * 100, height / 6 + 100), "", (width * 3 /30, height / 12), height))
+    make_offer_button = Button((width / 4 + 450, height / 6), "make offer", (width * 3 /12, height / 12), height)
+    return upgrade_cpc, upgrade_cps, main_menu, settings, currency, bisnes_button, back_bysnes, my_bysnes, YES_button, NO_button, text_pole_make_offer, make_offer_button

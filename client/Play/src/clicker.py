@@ -1,5 +1,5 @@
 from buttons import *
-
+from server import *
 
 class Game:
     def __init__(self):
@@ -10,7 +10,7 @@ class Game:
         self.background = Background((WIDTH / 2, HEIGHT / 2), WIDTH, HEIGHT)
         self.font = pygame.font.Font(fonts_folder + '/Font.ttf', 20)
         self.font2 = pygame.font.Font(fonts_folder + '/Font.ttf', 40)
-        self.upgradesCPC, self.upgradesCPS, self.menu_buttons, self.settings_buttons, self.currency_button, self.bysnes_button, self.back_bysnes, self.my_bysnes_button = initiate_buttons(WIDTH, HEIGHT)
+        self.upgradesCPC, self.upgradesCPS, self.menu_buttons, self.settings_buttons, self.currency_button, self.bysnes_button, self.back_bysnes, self.my_bysnes_button, self.YES_button, self.NO_button, self.text_pole_make_offer, self.make_offer_button = initiate_buttons(WIDTH, HEIGHT)
         self.menu_running = True
         self.settings_running = True
         self.rub_score = 0
@@ -19,6 +19,7 @@ class Game:
         self.auto_clicks = 0
         self.prev_tick = 0
         self.my_bysnes = list()
+        self.bysnes_id = 1
 
     def render_main(self):
         SCREEN.fill(SCREEN_COLOR)
@@ -100,6 +101,85 @@ class Game:
                         self.change_screen_size()
                         SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 
+    def render_my_own_bysnes(self, bysnes):
+        SCREEN.fill(SCREEN_COLOR)
+        SCREEN.blit(self.background.image, self.background.rect)
+        SCREEN.blit(self.logo.image, self.logo.rect)
+        self.back_bysnes.draw(SCREEN)
+        self.make_offer_button.draw(SCREEN)
+        LIST_THIS_PODPIS = ["id", 'what', 'How math', 'cost']
+        for i in self.text_pole_make_offer:
+            i.draw(SCREEN)
+        podpis = self.font.render(LIST_THIS_PODPIS[0], True, FONT_COLOR)
+        SCREEN.blit(podpis, (WIDTH / 20 + 350, HEIGHT / 20 + 100))
+
+        podpis = self.font.render(LIST_THIS_PODPIS[1], True, FONT_COLOR)
+        SCREEN.blit(podpis, (WIDTH / 20 + 450, HEIGHT / 20 + 100))
+
+        podpis = self.font.render(LIST_THIS_PODPIS[2], True, FONT_COLOR)
+        SCREEN.blit(podpis, (WIDTH / 20 + 525, HEIGHT / 20 + 100))
+
+        podpis = self.font.render(LIST_THIS_PODPIS[3], True, FONT_COLOR)
+        SCREEN.blit(podpis, (WIDTH / 20 + 650, HEIGHT / 20 + 100))
+        draw_string = ''
+        for i in bysnes.sclad.items():
+            draw_string += i[0] + ' ' + str(i[1]) + ' '
+        text_sclad = self.font.render(draw_string, True, FONT_COLOR)
+        SCREEN.blit(text_sclad, (WIDTH / 20, HEIGHT / 20 + 200))
+        text_sclad = self.font.render("склад", True, FONT_COLOR)
+        SCREEN.blit(text_sclad, (WIDTH / 20, HEIGHT / 20 + 150))
+        text_bysnes_id = self.font.render("bysnes_id" + str(bysnes.bysnes_id), True, FONT_COLOR)
+        SCREEN.blit(text_bysnes_id, (WIDTH / 20 + 300, HEIGHT / 20 ))
+        if (len(bysnes.offer)):
+            self.YES_button.draw(SCREEN)
+            self.NO_button.draw(SCREEN)
+            offer = bysnes.offer[0]
+            text_offer = self.font.render("from " + str(offer.bysnes_id_from) + " " + offer.name + " " + str(offer.count), True, FONT_COLOR)
+            SCREEN.blit(text_offer, (WIDTH / 20 + 500, HEIGHT / 20 + 200 ))
+            text_offer = self.font.render( " cost " + str(offer.cost) , True, FONT_COLOR)
+            SCREEN.blit(text_offer, (WIDTH / 20 + 500, HEIGHT / 20 + 250 ))
+
+        pygame.display.flip()
+
+    def check_events_my_own_bysnes(self, bysnes):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.running = False
+                self.bysnes_running = False
+                self.my_bysnes_flag = False
+                self.my_own_bysnes = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:  # escape is pressed
+                    self.running = False
+                    self.bysnes_running = False
+                    self.my_bysnes_flag = False
+                    self.my_own_bysnes = False
+                else:
+                    if event.key == pygame.K_BACKSPACE:
+                        self.user_text = user_text[:-1]
+                    else:
+                        self.user_text += event.unicode
+                    self.text_pole_make_offer[self.now_write_in].text = self.user_text
+
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                if (self.back_bysnes.rect.collidepoint(event.pos)):
+                    self.my_own_bysnes = False
+                if (self.YES_button.rect.collidepoint(event.pos)):
+                    self.dollar_score += bysnes.say_yes()
+                if (self.NO_button.rect.collidepoint(event.pos)):
+                    bysnes.say_no()
+                for i in range(4):
+                    if (self.text_pole_make_offer[i].rect.collidepoint(event.pos)):
+                        self.now_write_in = i
+                        self.user_text = ''
+                if (self.make_offer_button.rect.collidepoint(event.pos)):
+                    helper = self.text_pole_make_offer
+                    offer = Contract(bysnes.bysnes_id, int(helper[3].text), LIST_OF_MATIRIAL[int(helper[2].text)], int(helper[1].text), int(helper[0].text))
+                    print(int(helper[0].text))
+                    for i in helper:
+                        i.text = ''
+
+
     def render_my_bysnes(self):
         SCREEN.fill(SCREEN_COLOR)
         SCREEN.blit(self.background.image, self.background.rect)
@@ -108,7 +188,9 @@ class Game:
             i.draw(SCREEN)
         self.back_bysnes.draw(SCREEN)
         pygame.display.flip()
-        
+
+    
+
     def check_events_my_bysnes(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -123,7 +205,13 @@ class Game:
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if (self.back_bysnes.rect.collidepoint(event.pos)):
                     self.my_bysnes_flag = False
-
+                for i in self.my_bysnes_buttons:
+                    if (i.rect.collidepoint(event.pos)):
+                        self.my_own_bysnes = True
+                        self.now_write_in = 0
+                        while(self.my_own_bysnes):
+                            self.render_my_own_bysnes(i.bysnes)
+                            self.check_events_my_own_bysnes(i.bysnes)
 
 
 
@@ -161,6 +249,10 @@ class Game:
                     if (i.rect.collidepoint(event.pos) and i.clicable(self.dollar_score)):
                         bysnes, self.dollar_score = i.click(self.dollar_score)
                         self.my_bysnes.append(bysnes)
+                        self.my_bysnes[-1].bysnes_id = self.bysnes_id
+                        server.data_base[self.bysnes_id] = (user_name, len(self.my_bysnes) - 1)
+                        self.bysnes_id += 1
+
                 if (self.back_bysnes.rect.collidepoint(event.pos)):
                     self.bysnes_running = False
                 if (self.my_bysnes_button.rect.collidepoint(event.pos)):
@@ -181,6 +273,8 @@ class Game:
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:  # space button is pressed
                     self.dollar_score += self.booster
+                    for i in self.my_bysnes:
+                        i.work()
                 elif event.key == pygame.K_ESCAPE:  # escape is pressed
                     self.running = False
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  # right mouse click
@@ -210,3 +304,9 @@ class Game:
             self.clock.tick(FPS)
             self.check_events()
             self.render_main()
+
+game = Game()
+
+def run():
+    game.game_loop()
+

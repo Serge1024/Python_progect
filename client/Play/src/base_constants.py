@@ -1,0 +1,2 @@
+LIST_OF_MATIRIAL = ['нефть', 'бензин']
+LIST_OF_COST_OF_MATERIAL = [100, 200]
