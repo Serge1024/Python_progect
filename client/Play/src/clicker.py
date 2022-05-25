@@ -1,5 +1,6 @@
 from buttons import *
-from server import *
+import copy as copy
+
 
 class Game:
     def __init__(self):
@@ -31,12 +32,8 @@ class Game:
         self.currency_button[0].draw(SCREEN)
         text_score_dollar = self.font.render("$" + str(self.dollar_score), True, FONT_COLOR)
         text_score_rub = self.font.render("Your wallet:  " + str(self.rub_score) + "RUB", True, FONT_COLOR)
-        text_upgr_1 = self.font.render("$ per CLICK: " + str(self.booster), True, FONT_COLOR)
-        text_upgr_2 = self.font.render("$ per SEC: " + str(self.auto_clicks), True, FONT_COLOR)
         SCREEN.blit(text_score_dollar, (WIDTH / 20, HEIGHT / 20 + 200))
         SCREEN.blit(text_score_rub, (10 * WIDTH / 14, HEIGHT / 20 + 200))
-        SCREEN.blit(text_upgr_1, (WIDTH / 20, HEIGHT / 20))
-        SCREEN.blit(text_upgr_2, (10 * WIDTH / 14, HEIGHT / 20))
         pygame.display.flip()
 
     def render_menu(self):
@@ -156,7 +153,7 @@ class Game:
                     self.my_own_bysnes = False
                 else:
                     if event.key == pygame.K_BACKSPACE:
-                        self.user_text = user_text[:-1]
+                        self.user_text = self.user_text[:-1]
                     else:
                         self.user_text += event.unicode
                     self.text_pole_make_offer[self.now_write_in].text = self.user_text
@@ -164,10 +161,17 @@ class Game:
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if (self.back_bysnes.rect.collidepoint(event.pos)):
                     self.my_own_bysnes = False
+                    for i in self.text_pole_make_offer:
+                        i.text = ''
                 if (self.YES_button.rect.collidepoint(event.pos)):
-                    self.dollar_score += bysnes.say_yes()
+                    dec_of_dollar, ans_to_buyer = bysnes.say_yes()
+                    self.dollar_score += dec_of_dollar
+                    if (dec_of_dollar != 0):
+                        import server
+                        server.server.send_ans(ans_to_buyer)
                 if (self.NO_button.rect.collidepoint(event.pos)):
-                    bysnes.say_no()
+                    import server
+                    server.server.send_ans(bysnes.say_no())
                 for i in range(4):
                     if (self.text_pole_make_offer[i].rect.collidepoint(event.pos)):
                         self.now_write_in = i
@@ -175,9 +179,12 @@ class Game:
                 if (self.make_offer_button.rect.collidepoint(event.pos)):
                     helper = self.text_pole_make_offer
                     offer = Contract(bysnes.bysnes_id, int(helper[3].text), LIST_OF_MATIRIAL[int(helper[2].text)], int(helper[1].text), int(helper[0].text))
-                    print(int(helper[0].text))
                     for i in helper:
                         i.text = ''
+                    if (offer.cost <= self.dollar_score):
+                        self.dollar_score -= offer.cost
+                        import server
+                        server.server.put_contract(offer)
 
 
     def render_my_bysnes(self):
@@ -227,12 +234,8 @@ class Game:
         self.currency_button[0].draw(SCREEN)
         text_score_dollar = self.font.render("$" + str(self.dollar_score), True, FONT_COLOR)
         text_score_rub = self.font.render("Your wallet:  " + str(self.rub_score) + "RUB", True, FONT_COLOR)
-        text_upgr_1 = self.font.render("$ per CLICK: " + str(self.booster), True, FONT_COLOR)
-        text_upgr_2 = self.font.render("$ per SEC: " + str(self.auto_clicks), True, FONT_COLOR)
         SCREEN.blit(text_score_dollar, (WIDTH / 20, HEIGHT / 20 + 200))
         SCREEN.blit(text_score_rub, (10 * WIDTH / 14, HEIGHT / 20 + 200))
-        SCREEN.blit(text_upgr_1, (WIDTH / 20, HEIGHT / 20))
-        SCREEN.blit(text_upgr_2, (10 * WIDTH / 14, HEIGHT / 20))
         pygame.display.flip()
 
     def check_events_bysnes(self):        
@@ -248,9 +251,10 @@ class Game:
                 for i in self.bysnes_button:
                     if (i.rect.collidepoint(event.pos) and i.clicable(self.dollar_score)):
                         bysnes, self.dollar_score = i.click(self.dollar_score)
-                        self.my_bysnes.append(bysnes)
+                        self.my_bysnes.append(copy.deepcopy(bysnes))
                         self.my_bysnes[-1].bysnes_id = self.bysnes_id
-                        server.data_base[self.bysnes_id] = (user_name, len(self.my_bysnes) - 1)
+                        import server
+                        server.server.data_base[self.bysnes_id] = (server.user_name, len(self.my_bysnes) - 1)
                         self.bysnes_id += 1
 
                 if (self.back_bysnes.rect.collidepoint(event.pos)):
@@ -261,7 +265,6 @@ class Game:
                     while (self.my_bysnes_flag):
                         self.render_my_bysnes()
                         self.check_events_my_bysnes()
-
 
     def check_events(self):
         if pygame.time.get_ticks() - self.prev_tick >= 1000:
@@ -304,9 +307,8 @@ class Game:
             self.clock.tick(FPS)
             self.check_events()
             self.render_main()
-
-game = Game()
-
 def run():
+    global game
+    game = Game()
     game.game_loop()
 

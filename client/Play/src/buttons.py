@@ -148,7 +148,7 @@ def init_list_this_button(LIST_OF_BYSNES, width, height):
     return bisnes_button
 
 def initiate_buttons(width, height):
-    upgrade_cpc = UpgradeCPC((width / 4,  height / 6),'Повысить свой класс', 1, (width * 3 / 8, height / 12), height)
+    upgrade_cpc = UpgradeCPC((width / 4,  height / 6),'Повысить свой razryad', 1, (width * 3 / 8, height / 12), height)
     upgrade_cps = UpgradeCPS((width / 4 + width / 2,  height / 6), 'Купить бизнес', (width * 3 / 8, height / 12), height)
 
     main_menu = [Button((width / 2, 2 * height / 3), "Settings", (width / 4, height / 6), height),
