@@ -1,4 +1,4 @@
-from buttons import *
+import buttons as b
 import copy as copy
 
 
@@ -11,7 +11,7 @@ class Game:
         self.background = Background((WIDTH / 2, HEIGHT / 2), WIDTH, HEIGHT)
         self.font = pygame.font.Font(fonts_folder + '/Font.ttf', 20)
         self.font2 = pygame.font.Font(fonts_folder + '/Font.ttf', 40)
-        self.upgradesCPC, self.upgradesCPS, self.menu_buttons, self.settings_buttons, self.currency_button, self.bysnes_button, self.back_bysnes, self.my_bysnes_button, self.YES_button, self.NO_button, self.text_pole_make_offer, self.make_offer_button, self.add_button, self.add_worker = initiate_buttons(WIDTH, HEIGHT)
+        self.upgradesCPC, self.upgradesCPS, self.menu_buttons, self.settings_buttons, self.currency_button, self.bysnes_button, self.back_bysnes, self.my_bysnes_button, self.YES_button, self.NO_button, self.text_pole_make_offer, self.make_offer_button, self.add_button, self.add_worker = b.initiate_buttons(WIDTH, HEIGHT)
         self.menu_running = True
         self.settings_running = True
         self.rub_score = 0

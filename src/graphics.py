@@ -1,4 +1,4 @@
-from constants import *
+import constants
 
 WIDTH = 800  # game window width
 HEIGHT = 600  # game window height

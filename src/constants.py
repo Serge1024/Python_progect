@@ -1,9 +1,5 @@
 import os
 import pygame
-from bysnes import *
-from base_constants import *
-from clicker import *
-
 game_folder = os.path.dirname(__file__)
 resources_folder = game_folder + '/../resources'
 img_folder = os.path.join(resources_folder, 'sprites')

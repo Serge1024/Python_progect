@@ -1,4 +1,4 @@
-from base_constants import *
+import base_constants as b
 
 
 class Bysnes:

@@ -1,4 +1,4 @@
-from base_constants import *
+import base_constants 
 user_name = "Serge"
 class Server():
     def __init__(self):

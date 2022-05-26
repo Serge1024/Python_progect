@@ -1,4 +1,4 @@
-from clicker import *
+from clicker import run
 
 
 if (__name__ == "__main__"):

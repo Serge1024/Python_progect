@@ -1,5 +1,5 @@
-from graphics import *
-from dollar import *
+import graphics
+import dollar
 
 
 class Button(pygame.sprite.Sprite):
