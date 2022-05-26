@@ -50,7 +50,7 @@ class Bysnes:
             self.sclad[self.offer[0].name] -= self.offer[0].count
             ans = self.offer[0]
             self.offer.pop(0)
-            if(self.is_potreb):
+            if(self.is_potreb and self.work_resurce > 0):
                 self.offer.append(Contract(0, self.bysnes_id, self.main_product, self.work_resurce * 10, self.work_resurce * 10 * DICT_OF_COST_OF_MATERIAL[self.main_product]))
             return ans.cost, Answer(ans.bysnes_id_from, 0, ans.name, ans.count)
         return 0, 0
