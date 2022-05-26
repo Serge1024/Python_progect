@@ -1,1 +1,0 @@
-int beginner(char **argv);

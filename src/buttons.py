@@ -168,4 +168,10 @@ def initiate_buttons(width, height):
     for i in range(4):
         text_pole_make_offer.append(Button((width / 4 + 500 - i * 100, height / 6 + 100), "", (width * 3 /30, height / 12), height))
     make_offer_button = Button((width / 4 + 450, height / 6), "make offer", (width * 3 /12, height / 12), height)
-    return upgrade_cpc, upgrade_cps, main_menu, settings, currency, bisnes_button, back_bysnes, my_bysnes, YES_button, NO_button, text_pole_make_offer, make_offer_button
+    add_rub_button = Button((width / 4 - 150, height / 6 ), "", (width * 3 /30, height / 12), height)
+    text_pole_make_offer.append(add_rub_button)
+    add_button_for_rub = Button((width / 4 - 50, height / 6 ), "add", (width * 3 /30, height / 12), height)
+
+    add_worker = Button((width / 4 + 450, height / 6 + 400), "add_worker $" + str(price_of_worker), (width * 3 /10, height / 12), height)
+
+    return upgrade_cpc, upgrade_cps, main_menu, settings, currency, bisnes_button, back_bysnes, my_bysnes, YES_button, NO_button, text_pole_make_offer, make_offer_button, add_button_for_rub, add_worker

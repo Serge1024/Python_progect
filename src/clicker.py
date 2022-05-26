@@ -11,7 +11,7 @@ class Game:
         self.background = Background((WIDTH / 2, HEIGHT / 2), WIDTH, HEIGHT)
         self.font = pygame.font.Font(fonts_folder + '/Font.ttf', 20)
         self.font2 = pygame.font.Font(fonts_folder + '/Font.ttf', 40)
-        self.upgradesCPC, self.upgradesCPS, self.menu_buttons, self.settings_buttons, self.currency_button, self.bysnes_button, self.back_bysnes, self.my_bysnes_button, self.YES_button, self.NO_button, self.text_pole_make_offer, self.make_offer_button = initiate_buttons(WIDTH, HEIGHT)
+        self.upgradesCPC, self.upgradesCPS, self.menu_buttons, self.settings_buttons, self.currency_button, self.bysnes_button, self.back_bysnes, self.my_bysnes_button, self.YES_button, self.NO_button, self.text_pole_make_offer, self.make_offer_button, self.add_button, self.add_worker = initiate_buttons(WIDTH, HEIGHT)
         self.menu_running = True
         self.settings_running = True
         self.rub_score = 0
@@ -26,14 +26,14 @@ class Game:
         SCREEN.fill(SCREEN_COLOR)
         SCREEN.blit(self.background.image, self.background.rect)
         SCREEN.blit(self.logo.image, self.logo.rect)
+        text = self.upgradesCPC.text
+        self.upgradesCPC.text += " $ 1"
         self.upgradesCPC.draw(SCREEN)
         self.upgradesCPC.check_if_available(self.dollar_score)
+        self.upgradesCPC.text = text
         self.upgradesCPS.draw(SCREEN)
-        self.currency_button[0].draw(SCREEN)
         text_score_dollar = self.font.render("$" + str(self.dollar_score), True, FONT_COLOR)
-        text_score_rub = self.font.render("Your wallet:  " + str(self.rub_score) + "RUB", True, FONT_COLOR)
         SCREEN.blit(text_score_dollar, (WIDTH / 20, HEIGHT / 20 + 200))
-        SCREEN.blit(text_score_rub, (10 * WIDTH / 14, HEIGHT / 20 + 200))
         pygame.display.flip()
 
     def render_menu(self):
@@ -99,11 +99,21 @@ class Game:
                         SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 
     def render_my_own_bysnes(self, bysnes):
+        list_of_nes = list()
+        for i in bysnes.recept.ingredient.items():
+            if (i[1] != 0):
+                list_of_nes.append(i)
+        string_of_nes = str()
+        for i in list_of_nes:
+            string_of_nes += i[0] + ' ' + str(i[1])
+
         SCREEN.fill(SCREEN_COLOR)
         SCREEN.blit(self.background.image, self.background.rect)
         SCREEN.blit(self.logo.image, self.logo.rect)
         self.back_bysnes.draw(SCREEN)
         self.make_offer_button.draw(SCREEN)
+        self.add_button.draw(SCREEN)
+        self.add_worker.draw(SCREEN)
         LIST_THIS_PODPIS = ["id", 'what', 'How math', 'cost']
         for i in self.text_pole_make_offer:
             i.draw(SCREEN)
@@ -125,6 +135,26 @@ class Game:
         SCREEN.blit(text_sclad, (WIDTH / 20, HEIGHT / 20 + 200))
         text_sclad = self.font.render("склад", True, FONT_COLOR)
         SCREEN.blit(text_sclad, (WIDTH / 20, HEIGHT / 20 + 150))
+        text_recept = self.font.render(string_of_nes, True, FONT_COLOR)
+        SCREEN.blit(text_recept, (WIDTH / 20, HEIGHT / 20 + 300))
+
+        text_recept = self.font.render("$ : " + str(bysnes.cost_of_work), True, FONT_COLOR)
+        SCREEN.blit(text_recept, (WIDTH / 20, HEIGHT / 20 + 350))
+
+        text_recept = self.font.render("$_SCORE " + str(bysnes.rub_score), True, FONT_COLOR)
+        SCREEN.blit(text_recept, (WIDTH / 20 + 100, HEIGHT / 20 + 350))
+
+        text_recept = self.font.render("count worker " + str(bysnes.work_resurce), True, FONT_COLOR)
+        SCREEN.blit(text_recept, (WIDTH / 20, HEIGHT / 20 + 400))
+
+
+        text_recept = self.font.render("add dollar", True, FONT_COLOR)
+        SCREEN.blit(text_recept, (WIDTH / 20 - 10, HEIGHT / 20))
+
+
+        text_recept = self.font.render("необходимые материалы", True, FONT_COLOR)
+        SCREEN.blit(text_recept, (WIDTH / 20, HEIGHT / 20 + 250))
+
         text_bysnes_id = self.font.render("bysnes_id" + str(bysnes.bysnes_id), True, FONT_COLOR)
         SCREEN.blit(text_bysnes_id, (WIDTH / 20 + 300, HEIGHT / 20 ))
         if (len(bysnes.offer)):
@@ -172,12 +202,12 @@ class Game:
                 if (self.NO_button.rect.collidepoint(event.pos)):
                     import server
                     server.server.send_ans(bysnes.say_no())
-                for i in range(4):
+                for i in range(5):
                     if (self.text_pole_make_offer[i].rect.collidepoint(event.pos)):
                         self.now_write_in = i
                         self.user_text = ''
                 if (self.make_offer_button.rect.collidepoint(event.pos)):
-                    helper = self.text_pole_make_offer
+                    helper = self.text_pole_make_offer[0 : 4]
                     offer = Contract(bysnes.bysnes_id, int(helper[3].text), LIST_OF_MATIRIAL[int(helper[2].text)], int(helper[1].text), int(helper[0].text))
                     for i in helper:
                         i.text = ''
@@ -185,6 +215,16 @@ class Game:
                         self.dollar_score -= offer.cost
                         import server
                         server.server.put_contract(offer)
+                if (self.add_button.rect.collidepoint(event.pos)):
+                    if (self.dollar_score >= int(self.text_pole_make_offer[4].text)):
+                        self.dollar_score -= int(self.text_pole_make_offer[4].text)
+                        bysnes.add_rub(int(self.text_pole_make_offer[4].text))
+                    self.text_pole_make_offer[4].text = ''
+                if (self.add_worker.rect.collidepoint(event.pos)):
+                    if (self.dollar_score >= price_of_worker):
+                        bysnes.add_worker()
+                        self.dollar_score -= price_of_worker
+
 
 
     def render_my_bysnes(self):
@@ -227,15 +267,15 @@ class Game:
         SCREEN.blit(self.background.image, self.background.rect)
         SCREEN.blit(self.logo.image, self.logo.rect)
         for i in self.bysnes_button:
+            text = i.text
+            i.text += " $ " + str(i.bysnes.price)
             i.draw(SCREEN)
             i.check_if_available(self.dollar_score)
+            i.text = text
         self.back_bysnes.draw(SCREEN)
         self.my_bysnes_button.draw(SCREEN)
-        self.currency_button[0].draw(SCREEN)
         text_score_dollar = self.font.render("$" + str(self.dollar_score), True, FONT_COLOR)
-        text_score_rub = self.font.render("Your wallet:  " + str(self.rub_score) + "RUB", True, FONT_COLOR)
         SCREEN.blit(text_score_dollar, (WIDTH / 20, HEIGHT / 20 + 200))
-        SCREEN.blit(text_score_rub, (10 * WIDTH / 14, HEIGHT / 20 + 200))
         pygame.display.flip()
 
     def check_events_bysnes(self):        
@@ -290,9 +330,6 @@ class Game:
 
                 if self.upgradesCPC.rect.collidepoint(event.pos):
                     self.booster, self.dollar_score = self.upgradesCPC.click(self.booster, self.dollar_score)
-                if self.currency_button[0].rect.collidepoint(event.pos):
-                    self.rub_score, self.dollar_score = self.currency_button[0].click(self.rub_score, self.dollar_score)
-
     def game_end(self):
         while self.running:
             self.render_win()

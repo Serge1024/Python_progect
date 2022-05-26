@@ -2,7 +2,9 @@ from base_constants import *
 
 
 class Bysnes:
-    def __init__(self, name, price, recept, is_potreb, main_product):
+    def __init__(self, name, price, recept, is_potreb, main_product, cost_of_work):
+        self.cost_of_work = cost_of_work
+        self.rub_score = 0
         self.name = name
         self.price = price
         self.recept = recept
@@ -17,19 +19,28 @@ class Bysnes:
         if (is_potreb):
             self.offer.append(Contract(0, self.bysnes_id, self.main_product, self.work_resurce * 10, self.work_resurce * 10 * DICT_OF_COST_OF_MATERIAL[self.main_product]))
 
+    def add_rub(self, count_of_rub):
+        self.rub_score += count_of_rub
+
+    def add_worker(self):
+        self.work_resurce += 1
 
     def normal(self):
         flag = True
         for i in LIST_OF_MATIRIAL:
             flag = flag and (self.sclad[i] >= self.recept.ingredient[i])
-        return flag
+        return flag and (self.rub_score >= self.cost_of_work)
 
     def work(self):
+        count_of_make_iteration = 0
         for i in range(self.work_resurce):
             if (self.normal()):
+                count_of_make_iteration += 1
                 for i in LIST_OF_MATIRIAL:
                     self.sclad[i] -= self.recept.ingredient[i]
                     self.sclad[i] += self.recept.result[i]
+                self.rub_score -= self.cost_of_work
+        self.work_resurce = count_of_make_iteration
 
     def get_offer(self, contract):
         self.offer.append(contract)

@@ -21,11 +21,23 @@ GREEN = (100, 200, 100)
 SCREEN_COLOR = WHITE
 BUTTON_COLOR = BLUE
 FONT_COLOR = BLACK
- 
-recept_of_petrol = Recept({LIST_OF_MATIRIAL[0] : 3, LIST_OF_MATIRIAL[1] : 0 }, {LIST_OF_MATIRIAL[0] : 0, LIST_OF_MATIRIAL[1] : 2 })
-recept_of_oil = Recept({LIST_OF_MATIRIAL[0] : 0, LIST_OF_MATIRIAL[1] : 0 }, {LIST_OF_MATIRIAL[0] : 3, LIST_OF_MATIRIAL[1] : 0 })
 
-neft = Bysnes('Нефтяная вышка', 1, recept_of_oil, False, LIST_OF_MATIRIAL[0])
-zapravka = Bysnes('заправка', 5, recept_of_petrol, True, LIST_OF_MATIRIAL[1])
+def recept_maker(dict_this_ingredient):
+    answer = dict()
+    for i in LIST_OF_MATIRIAL:
+        answer[i] = 0
+    for i in dict_this_ingredient.keys():
+        answer[i] = dict_this_ingredient[i]
+    return answer
 
-LIST_OF_BYSNES = [neft, zapravka]
+recept_of_petrol = Recept(recept_maker({LIST_OF_MATIRIAL[0] : 3}), recept_maker({LIST_OF_MATIRIAL[1] : 2 }))
+recept_of_oil = Recept(recept_maker(dict()), recept_maker({LIST_OF_MATIRIAL[0] : 3}))
+recept_of_grass = Recept(recept_maker(dict()), recept_maker({LIST_OF_MATIRIAL[2] : 5}))
+recept_of_meat = Recept(recept_maker({LIST_OF_MATIRIAL[1] : 10, LIST_OF_MATIRIAL[2] : 5}), recept_maker({LIST_OF_MATIRIAL[3] : 4}))
+
+ferma = Bysnes('Ферма', 6, recept_of_meat, True, LIST_OF_MATIRIAL[3], 1)
+pole = Bysnes('Поле', 2, recept_of_grass, False, LIST_OF_MATIRIAL[2], 2)
+neft = Bysnes('Нефтяная вышка', 1, recept_of_oil, False, LIST_OF_MATIRIAL[0], 3)
+zapravka = Bysnes('заправка', 5, recept_of_petrol, True, LIST_OF_MATIRIAL[1], 2)
+
+LIST_OF_BYSNES = [neft, zapravka, pole, ferma]
